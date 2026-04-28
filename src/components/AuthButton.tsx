@@ -15,10 +15,9 @@ export default function AuthButton({ user }: { user: any }) {
 
   return user ? (
     <div className="flex items-center gap-4">
-      <span className="text-sm text-slate-500">{user.email}</span>
       <button
         onClick={handleSignOut}
-        className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors"
+        className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
       >
         Sign Out
       </button>
@@ -26,9 +25,9 @@ export default function AuthButton({ user }: { user: any }) {
   ) : (
     <Link
       href="/auth"
-      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+      className="px-4 py-1.5 text-sm font-medium text-blue-700 bg-white border border-blue-700 rounded-md hover:bg-blue-50 transition-colors"
     >
-      Sign In
+      Login
     </Link>
   );
 }
