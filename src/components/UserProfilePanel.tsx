@@ -81,7 +81,7 @@ export default function UserProfilePanel({ user, profileData, savedPosts, follow
         onClick={() => setIsOpen(!isOpen)}
         className="w-10 h-10 rounded-full bg-slate-200 border border-slate-300 overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all focus:outline-none"
       >
-        <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
+        <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
       </button>
 
       {isOpen && (
@@ -97,7 +97,7 @@ export default function UserProfilePanel({ user, profileData, savedPosts, follow
             <div className="flex justify-between items-start mb-8">
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 rounded-full bg-slate-200 border border-slate-300 overflow-hidden flex-shrink-0">
-                  <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
+                  <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold font-serif text-slate-900 leading-tight">{name}</h3>
@@ -186,7 +186,7 @@ export default function UserProfilePanel({ user, profileData, savedPosts, follow
                       {followedAuthors.map((fa: any) => (
                         <li key={fa.id} className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
-                            <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${fa.users.name}`} alt={fa.users.name} className="w-full h-full object-cover" />
+                            <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${fa.users.name}`} alt={fa.users.name} className="w-full h-full object-cover" />
                           </div>
                           <span className="text-sm font-semibold text-slate-900">{fa.users.name}</span>
                         </li>

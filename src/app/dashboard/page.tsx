@@ -161,7 +161,7 @@ export default async function DashboardPage() {
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded bg-slate-200 overflow-hidden flex-shrink-0 border border-slate-100">
                           {post.image_url ? (
-                            <img src={post.image_url} alt="" className="w-full h-full object-cover" />
+                            <img loading="lazy" src={post.image_url} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-slate-100"></div>
                           )}
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
                   <div key={comment.id} className="pb-6 border-b border-slate-200 last:border-0 last:pb-0">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
-                        <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="" />
+                        <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="" />
                       </div>
                       <div className="flex-grow flex justify-between items-center">
                         <span className="text-sm font-bold text-slate-900">{comment.users?.name || 'Unknown'}</span>
@@ -271,7 +271,7 @@ export default async function DashboardPage() {
                       </div>
                     </div>
                     <p className="text-sm text-slate-600 italic mb-3">
-                      "{comment.comment_text}"
+                      &quot;{comment.comment_text}&quot;
                     </p>
                     <div className="flex space-x-4">
                       <button className="text-[10px] font-bold text-blue-700 uppercase tracking-widest hover:text-blue-800">Approve</button>

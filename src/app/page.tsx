@@ -64,7 +64,7 @@ export default async function Home({
                 </div>
                 <div className="order-1 md:order-2 h-64 md:h-[400px]">
                   {featuredPost.image_url ? (
-                    <img src={featuredPost.image_url} alt={featuredPost.title} className="w-full h-full object-cover rounded-lg" />
+                    <img loading="lazy" src={featuredPost.image_url} alt={featuredPost.title} className="w-full h-full object-cover rounded-lg" />
                   ) : (
                     <div className="w-full h-full bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">No Image</div>
                   )}
@@ -79,7 +79,7 @@ export default async function Home({
                 <article className="flex flex-col h-full border border-slate-100 bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <div className="aspect-square mb-6 overflow-hidden rounded-lg bg-slate-100">
                     {post.image_url ? (
-                      <img src={post.image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img loading="lazy" src={post.image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-400">No Image</div>
                     )}

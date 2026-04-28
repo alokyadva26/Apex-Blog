@@ -33,9 +33,9 @@ export default async function UserProfileSidebar() {
         <summary className="p-4 flex items-center justify-between cursor-pointer list-none [&::-webkit-details-marker]:hidden bg-slate-50">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
-              <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
+              <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
             </div>
-            <span className="font-bold text-slate-900">{name}'s Profile</span>
+            <span className="font-bold text-slate-900">{name}&apos;s Profile</span>
           </div>
           <svg className="w-5 h-5 text-slate-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
         </summary>
@@ -57,7 +57,7 @@ function ProfileContent({ name, joinDate, likesCount, commentsCount }: any) {
     <>
       <div className="flex items-center space-x-4 mb-6 pb-6 border-b border-slate-100">
         <div className="w-14 h-14 rounded-full bg-slate-200 border border-slate-300 overflow-hidden flex-shrink-0">
-          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
+          <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${name}`} alt={name} className="w-full h-full object-cover" />
         </div>
         <div>
           <h3 className="text-lg font-bold font-serif text-slate-900 leading-tight">{name}</h3>

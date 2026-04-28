@@ -18,7 +18,7 @@ export default function AboutPage() {
             Engineered for High-Density Intellectual Consumption.
           </h1>
           <p className="text-2xl text-slate-500 leading-relaxed font-serif italic border-l-4 border-blue-600 pl-6 bg-slate-50 py-4 rounded-r-lg">
-            "The density of information has created a paradoxical insulation—a barrier composed of sheer volume. We are here to dismantle that."
+            &quot;The density of information has created a paradoxical insulation—a barrier composed of sheer volume. We are here to dismantle that.&quot;
           </p>
         </header>
 
@@ -29,7 +29,7 @@ export default function AboutPage() {
           
           <h2 className="mt-12 mb-6 text-3xl font-bold">The Density Paradox</h2>
           <p>
-            High-density intellectual consumption is not merely about reading more; it is about reading with greater intent. As we navigate through the sea of digital signals, the capacity to identify "signal from noise" becomes the ultimate currency of the enlightened mind. 
+            High-density intellectual consumption is not merely about reading more; it is about reading with greater intent. As we navigate through the sea of digital signals, the capacity to identify &quot;signal from noise&quot; becomes the ultimate currency of the enlightened mind. 
           </p>
           <p>
             Just as a city requires gutters and margins to function effectively, our digital layouts require <em>Negative Space</em> to prevent the clutter of the cognitive field. The design system of our collective discourse must mirror this necessity.

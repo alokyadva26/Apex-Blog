@@ -94,7 +94,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         {/* Top Author Block */}
         <div className="flex items-center py-6 border-t border-b border-slate-100 mb-8">
           <div className="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden mr-4 flex-shrink-0">
-            <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${post.users?.name}`} alt={post.users?.name} className="w-full h-full object-cover" />
+            <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${post.users?.name}`} alt={post.users?.name} className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="font-bold text-slate-900 text-lg font-serif">{post.users?.name || 'Dr. Julian Hivon'}</div>
@@ -107,7 +107,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       {post.image_url && (
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="aspect-[21/9] rounded-2xl overflow-hidden shadow-sm">
-            <img
+            <img loading="lazy"
               src={post.image_url}
               alt={post.title}
               className="w-full h-full object-cover"
@@ -126,7 +126,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                return (
                  <div key={idx} className="my-8 border-l-4 border-blue-600 pl-6 py-2 bg-slate-50 rounded-r-lg">
                    <p className="text-xl italic font-serif text-slate-600 m-0 leading-relaxed">
-                     "The quiet atmosphere of a premium literary journal provides a sanctuary where thought can breathe, away from the decorative noise of the common web."
+                     &quot;The quiet atmosphere of a premium literary journal provides a sanctuary where thought can breathe, away from the decorative noise of the common web.&quot;
                    </p>
                  </div>
                );
@@ -157,12 +157,12 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         {/* Big Author Bio Card */}
         <div className="bg-slate-50 border border-slate-100 rounded-2xl p-8 my-12 flex flex-col md:flex-row gap-6 items-start">
           <div className="w-24 h-24 rounded-xl bg-slate-200 overflow-hidden flex-shrink-0">
-            <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${post.users?.name}`} alt={post.users?.name} className="w-full h-full object-cover" />
+            <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${post.users?.name}`} alt={post.users?.name} className="w-full h-full object-cover" />
           </div>
           <div>
             <h3 className="text-xl font-bold font-serif text-slate-900 mb-2">{post.users?.name || 'Dr. Julian Hivon'}</h3>
             <p className="text-slate-600 mb-4 leading-relaxed text-sm">
-              {post.users?.name} is a leading theorist specializing in the intersection of digital spatiality and public philosophy. They have published over twenty essays on the "Apex Blog" regarding intellectual consumption.
+              {post.users?.name} is a leading theorist specializing in the intersection of digital spatiality and public philosophy. They have published over twenty essays on the &quot;Apex Blog&quot; regarding intellectual consumption.
             </p>
             
             {user && user.id !== post.author_id && (
@@ -228,7 +228,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                 return (
                   <div key={comment.id} className="flex gap-4 group">
                     <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                      <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="avatar" className="w-full h-full object-cover" />
+                      <img loading="lazy" src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="avatar" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-grow">
                       <div className="flex items-center justify-between mb-2">
