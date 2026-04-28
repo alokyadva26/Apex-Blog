@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { notFound } from 'next/navigation';
-import { addComment } from './actions';
+import { addComment, deleteComment, toggleFollowAuthor } from './actions';
 import Link from 'next/link';
 import SummaryToggle from './SummaryToggle';
 import PostActions from './PostActions';
@@ -35,7 +35,16 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   let isLiked = false;
   let isSaved = false;
+  let role = 'Viewer';
+  let isFollowing = false;
   if (user) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    if (profile) role = profile.role;
+
     const { data: userLike } = await supabase
       .from('likes')
       .select('id')
@@ -51,10 +60,19 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       .eq('user_id', user.id)
       .single();
     isSaved = !!userSave;
+
+    const { data: userFollow } = await supabase
+      .from('follows')
+      .select('id')
+      .eq('follower_id', user.id)
+      .eq('followed_id', post.author_id)
+      .single();
+    isFollowing = !!userFollow;
   }
 
   // Add Comment Action bound to this post
   const addCommentAction = addComment.bind(null, params.id);
+  const toggleFollowAuthorAction = toggleFollowAuthor.bind(null, post.author_id, params.id);
 
   return (
     <div className="bg-white">
@@ -146,9 +164,21 @@ export default async function PostPage({ params }: { params: { id: string } }) {
             <p className="text-slate-600 mb-4 leading-relaxed text-sm">
               {post.users?.name} is a leading theorist specializing in the intersection of digital spatiality and public philosophy. They have published over twenty essays on the "Apex Blog" regarding intellectual consumption.
             </p>
-            <button className="px-4 py-2 border border-slate-300 text-sm font-medium text-slate-700 bg-white rounded hover:bg-slate-50 transition-colors">
-              Follow Author
-            </button>
+            
+            {user && user.id !== post.author_id && (
+              <form action={toggleFollowAuthorAction}>
+                <button 
+                  type="submit" 
+                  className={`px-4 py-2 border text-sm font-medium rounded transition-colors ${
+                    isFollowing 
+                      ? 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                      : 'border-slate-300 text-slate-700 bg-white hover:bg-slate-50'
+                  }`}
+                >
+                  {isFollowing ? 'Following' : 'Follow Author'}
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
@@ -191,26 +221,38 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
           <div className="space-y-8">
             {comments && comments.length > 0 ? (
-              comments.map((comment) => (
-                <div key={comment.id} className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-                    <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="avatar" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-slate-900">{comment.users?.name || 'Unknown User'}</span>
-                      <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                        {new Date(comment.created_at).toLocaleDateString()}
-                      </span>
+              comments.map((comment) => {
+                const canDelete = user && (role === 'Admin' || comment.user_id === user.id || post.author_id === user.id);
+                const deleteAction = deleteComment.bind(null, comment.id, post.id);
+
+                return (
+                  <div key={comment.id} className="flex gap-4 group">
+                    <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
+                      <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${comment.users?.name}`} alt="avatar" className="w-full h-full object-cover" />
                     </div>
-                    <p className="text-slate-700 leading-relaxed text-sm">{comment.comment_text}</p>
-                    <div className="mt-3 flex space-x-4">
-                      <button className="text-xs font-bold text-blue-700 uppercase tracking-wider hover:text-blue-800">Reply</button>
-                      <button className="text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-slate-600">Report</button>
+                    <div className="flex-grow">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-bold text-slate-900">{comment.users?.name || 'Unknown User'}</span>
+                        <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                          {new Date(comment.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-slate-700 leading-relaxed text-sm">{comment.comment_text}</p>
+                      <div className="mt-3 flex items-center space-x-4">
+                        <button className="text-xs font-bold text-blue-700 uppercase tracking-wider hover:text-blue-800">Reply</button>
+                        <button className="text-xs font-bold text-slate-400 uppercase tracking-wider hover:text-slate-600">Report</button>
+                        {canDelete && (
+                          <form action={deleteAction} className="inline">
+                            <button type="submit" className="text-xs font-bold text-red-500 uppercase tracking-wider hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                              Delete
+                            </button>
+                          </form>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className="text-slate-500 py-4 italic">No contributions yet. Be the first to share your thoughts.</p>
             )}

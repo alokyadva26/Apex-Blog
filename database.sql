@@ -17,6 +17,9 @@ CREATE TABLE public.users (
   name TEXT,
   email TEXT NOT NULL,
   role user_role DEFAULT 'Viewer'::user_role NOT NULL,
+  age INTEGER,
+  gender TEXT,
+  mobile_number TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -111,10 +114,13 @@ CREATE POLICY "Authenticated users can insert comments." ON public.comments FOR 
 -- Comments: Users can update their own
 CREATE POLICY "Users can update own comments." ON public.comments FOR UPDATE USING (auth.uid() = user_id);
 -- Comments: Admins can delete any, users their own
+-- Comments: Admins can delete any, users their own, post author can delete comments on their own post
 CREATE POLICY "Users can delete own comments, Admins any." ON public.comments FOR DELETE USING (
-  EXISTS (
-    SELECT 1 FROM public.users WHERE users.id = auth.uid() AND (users.role = 'Admin' OR auth.uid() = comments.user_id)
-  )
+  auth.uid() = user_id
+  OR
+  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'Admin')
+  OR
+  EXISTS (SELECT 1 FROM public.posts WHERE id = comments.post_id AND author_id = auth.uid())
 );
 
 -- Likes: Anyone can read likes
@@ -142,8 +148,16 @@ CREATE POLICY "Users can delete own follows." ON public.follows FOR DELETE USING
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.users (id, email, name, role)
-  VALUES (new.id, new.email, split_part(new.email, '@', 1), 'Viewer');
+  INSERT INTO public.users (id, email, name, role, age, gender, mobile_number)
+  VALUES (
+    new.id, 
+    new.email, 
+    COALESCE(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)), 
+    COALESCE((new.raw_user_meta_data->>'role')::public.user_role, 'Viewer'::public.user_role),
+    NULLIF(new.raw_user_meta_data->>'age', '')::INTEGER,
+    new.raw_user_meta_data->>'gender',
+    new.raw_user_meta_data->>'mobile_number'
+  );
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

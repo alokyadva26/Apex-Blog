@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Edit } from 'lucide-react';
 import DeleteButton from './DeleteButton';
+import ExportButton from './ExportButton';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -42,11 +43,17 @@ export default async function DashboardPage() {
   const { data: posts, error } = await dbQuery;
 
   // Fetch recent comments for the sidebar
-  const { data: recentComments } = await supabase
+  let commentsQuery = supabase
     .from('comments')
-    .select('*, users(name)')
+    .select('*, users(name), posts!inner(author_id)')
     .order('created_at', { ascending: false })
     .limit(4);
+
+  if (!isAdmin) {
+    commentsQuery = commentsQuery.eq('posts.author_id', user.id);
+  }
+
+  const { data: recentComments } = await commentsQuery;
 
   // Fetch real metrics for the dashboard
   const { count: usersCount } = await supabase.from('users').select('*', { count: 'exact', head: true });
@@ -64,10 +71,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded shadow-sm border border-slate-200 hover:bg-slate-200 transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            Export Reports
-          </button>
+          <ExportButton />
           <Link
             href="/dashboard/create"
             className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded shadow-sm hover:bg-blue-800 transition-colors flex items-center gap-2"

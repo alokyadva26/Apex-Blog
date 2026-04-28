@@ -80,3 +80,50 @@ export async function toggleSavePost(postId: string) {
 
   revalidatePath(`/post/${postId}`);
 }
+
+export async function deleteComment(commentId: string, postId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('You must be logged in to delete a comment');
+  }
+
+  const { error } = await supabase
+    .from('comments')
+    .delete()
+    .eq('id', commentId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath(`/post/${postId}`);
+}
+
+export async function toggleFollowAuthor(authorId: string, postId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('You must be logged in to follow an author');
+  }
+
+  // Prevent following oneself
+  if (user.id === authorId) return;
+
+  const { data: existingFollow } = await supabase
+    .from('follows')
+    .select('id')
+    .eq('follower_id', user.id)
+    .eq('followed_id', authorId)
+    .single();
+
+  if (existingFollow) {
+    await supabase.from('follows').delete().eq('id', existingFollow.id);
+  } else {
+    await supabase.from('follows').insert({ follower_id: user.id, followed_id: authorId });
+  }
+
+  revalidatePath(`/post/${postId}`);
+}
