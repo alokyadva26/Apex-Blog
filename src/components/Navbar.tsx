@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import AuthButton from './AuthButton';
+import UserProfilePanel from './UserProfilePanel';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function Navbar() {
@@ -7,13 +7,40 @@ export default async function Navbar() {
   const { data: { user } } = await supabase.auth.getUser();
 
   let role = 'Viewer';
+  let profileData = null;
+  let savedPosts = [];
+  let followedAuthors = [];
+  let stats = { likesCount: 0 };
+
   if (user) {
     const { data: profile } = await supabase
       .from('users')
-      .select('role')
+      .select('*')
       .eq('id', user.id)
       .single();
-    if (profile) role = profile.role;
+    if (profile) {
+      role = profile.role;
+      profileData = profile;
+    }
+
+    const { count: likesCount } = await supabase.from('likes').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
+    stats.likesCount = likesCount || 0;
+
+    const { data: saved } = await supabase
+      .from('saved_posts')
+      .select('id, posts(id, title, summary)')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (saved) savedPosts = saved as any;
+
+    const { data: followed } = await supabase
+      .from('follows')
+      .select('id, users!followed_id(name)')
+      .eq('follower_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (followed) followedAuthors = followed as any;
   }
 
   return (
@@ -51,8 +78,6 @@ export default async function Navbar() {
               />
             </form>
 
-            <AuthButton user={user} />
-            
             {user && (role === 'Author' || role === 'Admin') ? (
               <Link
                 href="/dashboard"
@@ -61,6 +86,14 @@ export default async function Navbar() {
                 Dashboard
               </Link>
             ) : null}
+
+            <UserProfilePanel 
+              user={user} 
+              profileData={profileData} 
+              savedPosts={savedPosts} 
+              followedAuthors={followedAuthors} 
+              stats={stats} 
+            />
           </div>
         </div>
       </div>

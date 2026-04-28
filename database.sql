@@ -41,10 +41,40 @@ CREATE TABLE public.comments (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- 4.5. Create likes table
+CREATE TABLE public.likes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  post_id UUID REFERENCES public.posts(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(post_id, user_id)
+);
+
+-- 4.6. Create saved_posts table
+CREATE TABLE public.saved_posts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  post_id UUID REFERENCES public.posts(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(user_id, post_id)
+);
+
+-- 4.7. Create follows table
+CREATE TABLE public.follows (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  follower_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  followed_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(follower_id, followed_id)
+);
+
 -- 5. Enable Row Level Security (RLS)
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.likes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.saved_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.follows ENABLE ROW LEVEL SECURITY;
 
 -- 6. Create RLS Policies
 
@@ -86,6 +116,27 @@ CREATE POLICY "Users can delete own comments, Admins any." ON public.comments FO
     SELECT 1 FROM public.users WHERE users.id = auth.uid() AND (users.role = 'Admin' OR auth.uid() = comments.user_id)
   )
 );
+
+-- Likes: Anyone can read likes
+CREATE POLICY "Likes are viewable by everyone." ON public.likes FOR SELECT USING (true);
+-- Likes: Any authenticated user can insert
+CREATE POLICY "Authenticated users can insert likes." ON public.likes FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- Likes: Users can delete their own
+CREATE POLICY "Users can delete own likes." ON public.likes FOR DELETE USING (auth.uid() = user_id);
+
+-- Saved Posts: Users can read their own
+CREATE POLICY "Users can view own saved posts." ON public.saved_posts FOR SELECT USING (auth.uid() = user_id);
+-- Saved Posts: Users can insert their own
+CREATE POLICY "Users can insert own saved posts." ON public.saved_posts FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- Saved Posts: Users can delete their own
+CREATE POLICY "Users can delete own saved posts." ON public.saved_posts FOR DELETE USING (auth.uid() = user_id);
+
+-- Follows: Anyone can read follows
+CREATE POLICY "Follows are viewable by everyone." ON public.follows FOR SELECT USING (true);
+-- Follows: Users can insert their own follows
+CREATE POLICY "Users can insert own follows." ON public.follows FOR INSERT WITH CHECK (auth.uid() = follower_id);
+-- Follows: Users can delete their own follows
+CREATE POLICY "Users can delete own follows." ON public.follows FOR DELETE USING (auth.uid() = follower_id);
 
 -- 7. Trigger to automatically create a user profile when signing up via Auth
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
