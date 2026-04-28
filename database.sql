@@ -28,6 +28,7 @@ CREATE TABLE public.posts (
   image_url TEXT,
   author_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
   summary TEXT,
+  domain TEXT NOT NULL DEFAULT 'Uncategorized',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

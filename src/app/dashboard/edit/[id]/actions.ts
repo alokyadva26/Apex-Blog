@@ -24,9 +24,13 @@ export async function editPost(postId: string, formData: FormData) {
   const title = formData.get('title') as string;
   const body = formData.get('body') as string;
   const image_url = formData.get('image_url') as string;
+  const domainSelect = formData.get('domainSelect') as string;
+  const customDomain = formData.get('customDomain') as string;
   const regenerateSummary = formData.get('regenerate_summary') === 'true';
 
-  let updates: any = { title, body, image_url };
+  const domain = domainSelect === 'Others' && customDomain ? customDomain.trim() : (domainSelect || 'Uncategorized');
+
+  let updates: any = { title, body, image_url, domain };
 
   if (regenerateSummary) {
     try {

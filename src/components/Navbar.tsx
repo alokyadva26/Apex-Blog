@@ -25,13 +25,13 @@ export default async function Navbar() {
               Apex Blog
             </Link>
             <div className="hidden md:flex space-x-6">
-              <Link href="#" className="text-sm font-medium text-slate-900 border-b-2 border-blue-600 pb-1">
+              <Link href="/" className="text-sm font-medium text-slate-500 hover:text-slate-900 pb-1">
                 Explore
               </Link>
-              <Link href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 pb-1">
+              <Link href="/topics" className="text-sm font-medium text-slate-500 hover:text-slate-900 pb-1">
                 Topics
               </Link>
-              <Link href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 pb-1">
+              <Link href="/about" className="text-sm font-medium text-slate-500 hover:text-slate-900 pb-1">
                 About
               </Link>
             </div>

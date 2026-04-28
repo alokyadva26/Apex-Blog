@@ -209,8 +209,41 @@ export default async function DashboardPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="lg:w-1/3">
-          <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 h-full">
+        <div className="lg:w-1/3 flex flex-col gap-8">
+          {/* Domain Stats */}
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
+            <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
+              <h2 className="text-lg font-bold font-serif text-slate-900">Domain Statistics</h2>
+            </div>
+            <ul className="space-y-3">
+              {(() => {
+                const predefinedDomains = ['Sports', 'Technology', 'AI', 'Web3', 'Lifestyle'];
+                const counts: Record<string, number> = {};
+                predefinedDomains.forEach(d => counts[d] = 0);
+                
+                if (posts) {
+                  posts.forEach(p => {
+                    const d = p.domain || 'Uncategorized';
+                    counts[d] = (counts[d] || 0) + 1;
+                  });
+                }
+                
+                return Object.entries(counts)
+                  .sort((a, b) => b[1] - a[1]) // Sort by count descending
+                  .map(([domain, count]) => (
+                    <li key={domain} className="flex justify-between items-center text-sm">
+                      <span className="font-medium text-slate-700">{domain}</span>
+                      <span className="bg-white px-2 py-0.5 rounded text-slate-500 border border-slate-200 shadow-sm font-bold text-xs">
+                        {count}
+                      </span>
+                    </li>
+                  ));
+              })()}
+            </ul>
+          </div>
+
+          {/* Monitor Comments */}
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
             <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
               <h2 className="text-lg font-bold font-serif text-slate-900">Monitor Comments</h2>
               {recentComments && recentComments.length > 0 && (

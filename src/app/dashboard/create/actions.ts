@@ -28,6 +28,10 @@ export async function createPost(formData: FormData) {
   const title = formData.get('title') as string;
   const body = formData.get('body') as string;
   const image_url = formData.get('image_url') as string;
+  const domainSelect = formData.get('domainSelect') as string;
+  const customDomain = formData.get('customDomain') as string;
+
+  const domain = domainSelect === 'Others' && customDomain ? customDomain.trim() : (domainSelect || 'Uncategorized');
 
   if (!title || !body) {
     throw new Error('Title and body are required');
@@ -55,6 +59,7 @@ export async function createPost(formData: FormData) {
       body,
       image_url,
       summary,
+      domain,
       author_id: user.id
     });
 

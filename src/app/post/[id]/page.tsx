@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { notFound } from 'next/navigation';
 import { addComment } from './actions';
 import Link from 'next/link';
+import SummaryToggle from './SummaryToggle';
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -42,9 +43,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           {post.title}
         </h1>
         {post.summary && (
-          <p className="text-xl md:text-2xl text-slate-500 italic mb-8 leading-relaxed font-serif">
-            {post.summary}
-          </p>
+          <SummaryToggle summary={post.summary} />
         )}
         
         {/* Top Author Block */}

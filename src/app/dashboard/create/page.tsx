@@ -36,8 +36,42 @@ export default function CreatePostPage() {
           <input
             name="title"
             required
-            className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
             placeholder="Enter an engaging title"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Domain</label>
+          <select
+            name="domainSelect"
+            className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+            onChange={(e) => {
+              if (e.target.value === 'Others') {
+                document.getElementById('customDomainContainer')?.classList.remove('hidden');
+                document.getElementById('customDomainInput')?.setAttribute('required', 'true');
+              } else {
+                document.getElementById('customDomainContainer')?.classList.add('hidden');
+                document.getElementById('customDomainInput')?.removeAttribute('required');
+              }
+            }}
+          >
+            <option value="Sports">Sports</option>
+            <option value="Technology">Technology</option>
+            <option value="AI">AI</option>
+            <option value="Web3">Web3</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+
+        <div id="customDomainContainer" className="hidden transition-all duration-300">
+          <label className="block text-sm font-medium text-slate-700 mb-1">Specify Domain</label>
+          <input
+            id="customDomainInput"
+            name="customDomain"
+            className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+            placeholder="Enter custom domain"
           />
         </div>
 
@@ -46,7 +80,7 @@ export default function CreatePostPage() {
           <input
             name="image_url"
             type="url"
-            className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
             placeholder="https://example.com/image.jpg"
           />
         </div>
@@ -57,7 +91,7 @@ export default function CreatePostPage() {
             name="body"
             required
             rows={12}
-            className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow resize-y"
             placeholder="Write your amazing content here..."
           ></textarea>
         </div>

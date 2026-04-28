@@ -36,7 +36,46 @@ export default function EditPostForm({ post, postId }: { post: any, postId: stri
           name="title"
           required
           defaultValue={post.title}
-          className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Domain</label>
+        <select
+          name="domainSelect"
+          defaultValue={['Sports', 'Technology', 'AI', 'Web3', 'Lifestyle'].includes(post.domain) ? post.domain : 'Others'}
+          className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+          onChange={(e) => {
+            if (e.target.value === 'Others') {
+              document.getElementById('customDomainContainerEdit')?.classList.remove('hidden');
+              document.getElementById('customDomainInputEdit')?.setAttribute('required', 'true');
+            } else {
+              document.getElementById('customDomainContainerEdit')?.classList.add('hidden');
+              document.getElementById('customDomainInputEdit')?.removeAttribute('required');
+            }
+          }}
+        >
+          <option value="Sports">Sports</option>
+          <option value="Technology">Technology</option>
+          <option value="AI">AI</option>
+          <option value="Web3">Web3</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Others">Others</option>
+        </select>
+      </div>
+
+      <div 
+        id="customDomainContainerEdit" 
+        className={`${['Sports', 'Technology', 'AI', 'Web3', 'Lifestyle'].includes(post.domain) ? 'hidden' : ''} transition-all duration-300`}
+      >
+        <label className="block text-sm font-medium text-slate-700 mb-1">Specify Domain</label>
+        <input
+          id="customDomainInputEdit"
+          name="customDomain"
+          defaultValue={['Sports', 'Technology', 'AI', 'Web3', 'Lifestyle'].includes(post.domain) ? '' : post.domain}
+          className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
+          placeholder="Enter custom domain"
         />
       </div>
 
@@ -46,7 +85,7 @@ export default function EditPostForm({ post, postId }: { post: any, postId: stri
           name="image_url"
           type="url"
           defaultValue={post.image_url || ''}
-          className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow"
         />
       </div>
 
@@ -57,7 +96,7 @@ export default function EditPostForm({ post, postId }: { post: any, postId: stri
           required
           rows={12}
           defaultValue={post.body}
-          className="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full px-4 py-2 border border-slate-200 rounded text-slate-900 bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow resize-y"
         ></textarea>
       </div>
 
