@@ -1,8 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Edit, Trash2 } from 'lucide-react';
-import { deletePost } from './actions';
+import { Edit } from 'lucide-react';
+import DeleteButton from './DeleteButton';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -90,18 +90,7 @@ export default async function DashboardPage() {
                       >
                         <Edit className="w-5 h-5" />
                       </Link>
-                      <form action={deletePost.bind(null, post.id)}>
-                        <button
-                          type="submit"
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                          title="Delete Post"
-                          onClick={(e) => {
-                            if (!confirm('Are you sure you want to delete this post?')) e.preventDefault();
-                          }}
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </form>
+                      <DeleteButton postId={post.id} />
                     </div>
                   </td>
                 </tr>

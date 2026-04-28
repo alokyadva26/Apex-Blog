@@ -1,5 +1,13 @@
 -- Run this in your Supabase SQL Editor
 
+-- 0. Drop existing tables/types to ensure a clean slate (optional but helps avoid "already exists" errors)
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user();
+DROP TABLE IF EXISTS public.comments CASCADE;
+DROP TABLE IF EXISTS public.posts CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+DROP TYPE IF EXISTS public.user_role CASCADE;
+
 -- 1. Create custom enum for roles
 CREATE TYPE user_role AS ENUM ('Viewer', 'Author', 'Admin');
 

@@ -36,7 +36,7 @@ export async function createPost(formData: FormData) {
   // Generate AI Summary
   let summary = '';
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = `Summarize the following blog post in approximately 200 words. Keep it engaging and scannable.\n\nTitle: ${title}\nBody:\n${body}`;
     const result = await model.generateContent(prompt);
     summary = result.response.text();
